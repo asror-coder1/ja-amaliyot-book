@@ -11,32 +11,46 @@ elForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
   let book = {
+    id: Date.now(),
     name: elName.value,
     year: elYear.value,
     author: elAuthor.value,
   };
 
   books.push(book);
-  localStorage.setItem("books-data", JSON.stringify(books));T
 
   renderBooks(books, list);
   elForm.reset();
 });
 
 function renderBooks(arr, parent) {
-  parent.innerHTMl = "";
+  parent.innerHTML = "";
   arr.forEach((el) => {
     let li = document.createElement("li");
-    li.classList.add("item")
+    li.classList.add("item");
     li.innerHTML = `  <span class="item__title">${el.name}</span>
             <span class="item__year">${el.year}</span>
             <span class="item__author">${el.author}</span>
             <div>
-                <i class="bi bi-trash"></i>
+                <i data-asror="${el.id}" class="bi bi-trash"></i>
                 <i class="bi bi-pencil-square"></i>
             </div>`;
     parent.appendChild(li);
   });
 }
 
-renderBooks(books, list);
+// event delegation bu ota tomonidan bolaga murojatb qilish
+
+window.addEventListener("click", (e) => {
+  // e.target  bu bosilgan element
+
+  if (e.target.closest(".bi-trash")) {
+    let delId = e.target.dataset.asror;
+
+    books = books.filter((el) => {
+      return el.id !== +delId;
+    });
+
+    renderBooks(books, list);
+  }
+});
